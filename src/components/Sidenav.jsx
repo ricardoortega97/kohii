@@ -12,6 +12,11 @@ const SideNav = () => {
                         Home
                     </span>
                 </Link>
+                <Link to="/create" className='link'>
+                    <span>
+                        Create Post
+                    </span>
+                </Link>
                 <div className="channels">
                     <h3>Channels</h3>
                     <Link to="/channel/1" className='link'>

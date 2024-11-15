@@ -21,6 +21,8 @@
     max-width: 1210px;
     padding-right: 0rem;
     padding-left: 0rem;
+    margin-right: 10px;
+    margin-left: 20px;
 }
 .header-options {
     height: 100%;

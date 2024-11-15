@@ -1,19 +1,41 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../client/supabaseClient";
-import { useNavigate } from "react-router-dom";
-
+import '../styles/PostForm.css';
+import { TextField } from "@mui/material";
 
 const PostForm = () => {
 
-    const [post, setPost] = useState({title: "", context: "", channel_id: "", user_id: "", image: ""});
+    const [post, setPost] = useState({title: "", context: "", channel_id: 1, user_id: "", image: ""});
     const [currentUser, setCurrentUser] = useState([]);
     const [channels, setChannels] = useState([]);
 
     useEffect(() => { 
         const fetchCurrentUser = async () => {
-            const { data } = await supabase.auth.getUser();
-            setCurrentUser(data.user);
-            setPost({ ...post, user_id: data.user.id });
+            const { 
+                data: {user},
+                error: authError,
+            } = await supabase.auth.getUser();
+            
+            if (authError) {
+                console.error("Not authenticated", authError.message);
+                return;
+            } 
+            if (user) {
+                const { data: userData, error: userError } = await supabase
+                .from("users")
+                .select("id, username")
+                .eq("id", user.id)
+                .single();
+
+                if (userError) {
+                    console.error("Error fetching current user", userError.message);
+                    return;
+                } else {
+                    setCurrentUser(userData);
+                    setPost((prevPost) => ({...prevPost,
+                        user_id: userData.id}));
+                }
+            }
         };
 
         const fetchChannels = async () => {
@@ -26,18 +48,25 @@ const PostForm = () => {
 
     const createPost = async (event) => {
         event.preventDefault();
-        await supabase
-        .from("posts")
-        .insert([
-            {
-                title: post.title,
-                context: post.context,
-                channel_id: post.channel_id,
-                user_id: post.user_id,
-                image: post.image,
-            },
-        ])
-        .select();
+        try {
+            const { data, error } = await supabase
+            .from("posts")
+            .insert(
+                {
+                    title: post.title,
+                    context: post.context,
+                    channel_id: post.channel_id || 1,
+                    user_id: post.user_id
+                })
+            .select();
+            
+            if (error) {
+                throw error;
+            }
+            console.log("Post created successfully", data);
+        } catch (error) {
+            console.error("Error creating post", error.message);
+        }
     }
 
     const handleChange = (event) => {
@@ -46,26 +75,42 @@ const PostForm = () => {
 
     return ( 
         <div className="create-post">
-            <h2>Create Post</h2>
+
             <form onSubmit={createPost}>
+                <label>User</label>
+                <p>Username: {currentUser?.username || "Loading..."}</p>
+                    
                 <label>Title</label>
-                <input type="text" name="title" onChange={handleChange} />
+                <TextField
+                id="outlined-helperText"
+                label="Title"
+                name="title"
+                onChange={handleChange}
+                />
                 <label>Context</label>
-                <input type="text" name="context" onChange={handleChange} />
+                <TextField
+                id="outlined-multiline-static"
+                label="Context"
+                multiline
+                rows={10}
+                name="context"
+                onChange={handleChange}
+                sx={{ width: '100%' }}
+                />
+
                 <label>Channel</label>
-                <select name="channel_id" onChange={handleChange}>
+                <select name="channel_id" value={post.channel_id} onChange={handleChange}>
                     {channels.map((channel) => (
                         <option key={channel.id} value={channel.id}>
                             {channel.name}
                         </option>
                     ))}
                 </select>
-                <label>User</label>
-                <p>{currentUser?.username}</p>
+                {/* 
                 
                 <label>Image</label>
-                <input type="text" name="image" onChange={handleChange} />
-                <button type="submit">Create Post</button>
+                <input type="text" name="image" onChange={handleChange} /> */}
+                <button type="submit">Create Post</button> 
             </form>
         </div>
     )

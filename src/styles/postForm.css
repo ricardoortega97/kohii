@@ -1,0 +1,28 @@
+.create-post {
+    margin-left: 250px;
+    width: 500px;
+    padding: 20px;
+    border: 1px solid #412594;
+    border-radius: 5px;
+    margin-top: 20px;
+    background-color: #ffffff;
+}
+.create-post h2 {
+    margin-bottom: 10px;
+}
+.context {
+    width: 500px;
+}
+
+p {
+    color: #1b1a1e;
+}
+.post-card {
+    margin-left: 250px;
+    width: 500px;
+    padding: 20px;
+    border: 1px solid #412594;
+    border-radius: 5px;
+    margin-top: 20px;
+    background-color: #ffffff;
+}
