@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../client/supabaseClient";
-import { Link } from "react-router-dom";
+import PostCard from "../components/PostCard";
 
 const Home = () => {
     const [allPosts, setAllPosts] = useState([]);
@@ -16,7 +16,6 @@ const Home = () => {
                     console.error("Error fetching posts", error.message);
                     throw error;
                 }
-
                 console.log("Fetched all posts", allPosts);
                 
             } catch (error) {
@@ -28,17 +27,18 @@ const Home = () => {
 
     return (
         <div className="post-list">
-        {allPosts.map((post) => (
-            <div key={post.id} className="post-card">
-                <Link to={`/post/${post.id}`}>
-                    <h2>{post.title}</h2>
-                    <p>{post.context.substring(0, 100)}...</p>
-                    <p><strong>Author:</strong> {post.user_id?.username || "Unknown"}</p>
-                </Link>
-            </div>
-        ))}
-    </div>
-);
+            {allPosts.length > 0 ? (
+                allPosts.map((post) => 
+                    <PostCard
+                        key={post.id}
+                        post={post}
+                    />
+                )
+            ) : (
+                <h2>No posts found</h2>
+            )}
+        </div>
+    );
 }
 
 export default Home;

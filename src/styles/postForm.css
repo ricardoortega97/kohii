@@ -25,4 +25,6 @@ p {
     border-radius: 5px;
     margin-top: 20px;
     background-color: #ffffff;
+    justify-content: space-between;
+    align-self: start;
 }

@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../client/supabaseClient";
 import { Link } from "react-router-dom";
 import '../styles/postForm.css';
+import { formatDistanceToNow } from "date-fns";
 
 const PostCard = (props) => {
     const [post, setPost] = useState(props.post);
@@ -24,12 +25,17 @@ const PostCard = (props) => {
         fetchPost();
     }, [props.post]);
 
+    const formatDate = (date) => {
+        if (!date) return "";
+        return formatDistanceToNow(new Date(date), { addSuffix: true });
+    };
+
     return (
-        <div className="post-card">
+            <div className="post-card">
             <Link to={`/post/${post.id}`} className="link">
                 <div>
                     <span>{post.user_id.username}</span>
-                    <span>{post.created_at}</span>
+                    <span>{formatDate(post.created_at)}</span>
                 </div>
                 <h3>{post.title}</h3>
                 <p>{post.context}</p>

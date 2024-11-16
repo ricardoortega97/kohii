@@ -67,10 +67,12 @@ const PostForm = () => {
         } catch (error) {
             console.error("Error creating post", error.message);
         }
+        window.location = "/";
     }
 
     const handleChange = (event) => {
         setPost({ ...post, [event.target.name]: event.target.value });
+
     }
 
     return ( 
