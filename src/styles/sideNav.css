@@ -1,6 +1,6 @@
 .sideNav {
     height: 100%;
-    width: 225px;
+    max-width: 200px;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -13,7 +13,8 @@
     position: sticky;
     top: 4.3rem;
     height: 80vh;
-    min-width: 226px;
+    max-width: 200px;
+    min-width: 100px;
     overflow: auto;
     transition-duration: 0.2s;
 }
@@ -71,7 +72,7 @@
 }
 
 @media (max-width: 768px) {
-    .sidebar {
-    width: 200px;
+    .sideNav {
+    max-width: 200px;
     }
 }

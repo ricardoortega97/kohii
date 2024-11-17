@@ -11,12 +11,12 @@ const Home = () => {
                 const { data, error } = await supabase
                     .from("posts")
                     .select("*, user_id(username)");
-                setAllPosts(data);
                 if (error) {
                     console.error("Error fetching posts", error.message);
                     throw error;
                 }
-                console.log("Fetched all posts", allPosts);
+                setAllPosts(data);
+                console.log("Fetched all posts", data);
                 
             } catch (error) {
                     console.error("Unexpected error", error.message); 

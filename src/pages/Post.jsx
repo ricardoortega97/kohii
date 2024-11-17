@@ -1,9 +1,10 @@
-import PostCard from "../components/PostCard";
 import { useEffect, useState } from "react";
 import { supabase } from "../client/supabaseClient";
 import { useParams } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
+import { Link } from "react-router-dom";
 import '../styles/post.css';
+import more from '../components/more.png';
 
 const Post = () => {
     const { id } = useParams();
@@ -53,13 +54,13 @@ const Post = () => {
 
     const handleComment = async () => {
         if (!newComment.trim()) return; 
-        const { error } = await supabase
+        const { data, error } = await supabase
             .from("comments")
             .insert([
                 {
                     post_id: id,
                     context: newComment,
-                    user_id: user.id,  // username or returns null from the fetchUser function
+                    user_id: user ? user.id : null,  // username or returns null from the fetchUser function
                 },
             ]);
             console.log("Comment posted successfully");
@@ -67,10 +68,8 @@ const Post = () => {
         if (error) {
             console.error("Error posting comment", error.message);
         } else {
-            setComments((prevComments) => [
-                ...prevComments]);
+            setComments((prevComments) => [...prevComments, ...data]); // Append the new comment
             setNewComment("");
-
             window.location.reload();
         }
     };
@@ -84,10 +83,19 @@ const Post = () => {
         <div className="post-container">
             {error && <p>Error: {error}</p>}
             {post ? (
-                <div>
-                    <h2>{post.title}</h2>
-                    <p>{post.context}</p>
-                    <small>Posted by {post.user_id.username} {formatDate(post.created_at)}</small>
+                <div className="inner-post">
+                    <div className="edit">
+                        <Link to={`/edit/${id}`}><img className="moreButton" alt="edit button" src={more} /></Link>
+                    </div>
+                    <div className="author">
+                        <p>Posted by {post.user_id?.username}</p> 
+                        <small>{formatDate(post.created_at)}</small>
+                        {/* <small>Posted by {post.user_id.username} {formatDate(post.created_at)}</small> */}
+                    </div>
+                    <div className="post-context">
+                        <h2>{post.title}</h2>
+                        <p>{post.context}</p>
+                    </div>
                 </div>
             ) : (
                 <p>Loading...</p>
@@ -99,7 +107,10 @@ const Post = () => {
                     {comments.map((comment) => (
                         <li key={comment.id}>
                             <p>{comment.context}</p> 
-                            <small>{formatDate(comment.created_at)}</small>
+                            <small>
+                                {comment.user_id?.username || "Anonymous"}{" "}
+                                {formatDate(comment.created_at)}
+                            </small>
                         </li>
                     ))}
                 </ul>
@@ -110,7 +121,7 @@ const Post = () => {
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder="Add a comment"
                     ></textarea>
-                    <button type="submit">Post Comment</button>
+                    <button type="submit" disabled={!newComment.trim()}>Post Comment</button>
                 </form>
             </div>
         </div>
