@@ -1,41 +1,19 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../client/supabaseClient";
 import PostCard from "../components/PostCard";
+import { useOutletContext } from "react-router";
 
 const Home = () => {
-    const [allPosts, setAllPosts] = useState([]);
+    const { allPosts, filteredResults } = useOutletContext();
 
-    useEffect(() => {
-        const fetchAllPosts = async () => {
-            try {
-                const { data, error } = await supabase
-                    .from("posts")
-                    .select("*, user_id(username)");
-                if (error) {
-                    console.error("Error fetching posts", error.message);
-                    throw error;
-                }
-                setAllPosts(data);
-                console.log("Fetched all posts", data);
-                
-            } catch (error) {
-                    console.error("Unexpected error", error.message); 
-            } 
-        }
-        fetchAllPosts();
-    }, []);
+    const postsToDisplay = filteredResults.length > 0 ? filteredResults : allPosts;
 
     return (
         <div className="post-list">
-            {allPosts.length > 0 ? (
-                allPosts.map((post) => 
-                    <PostCard
-                        key={post.id}
-                        post={post}
-                    />
-                )
+            {postsToDisplay.length > 0 ? (
+                postsToDisplay.map((post) => (
+                    <PostCard key={post.id} post={post} />
+                ))
             ) : (
-                <h2>No posts found</h2>
+                <h1>No posts found</h1>
             )}
         </div>
     );
