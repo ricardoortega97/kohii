@@ -82,12 +82,31 @@ const PostForm = () => {
                 <label>User</label>
                 <p>Username: {currentUser?.username || "Loading..."}</p>
                     
-                <label>Title</label>
                 <TextField
-                id="outlined-helperText"
-                label="Title"
-                name="title"
-                onChange={handleChange}
+                    id="outlined-helperText"
+                    label="Title"
+                    name="title"
+                    onChange={handleChange}
+                    sx={{
+                        width: '100%',
+                        '& label.Mui-focused': {
+                        color: '#A0AAB4', // Label color when focused
+                        },
+                        '& .MuiInput-underline:after': {
+                        borderBottomColor: '#B2BAC2', // Underline color (if applicable)
+                        },
+                        '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                            borderColor: 'white', // Default border color
+                        },
+                        '&:hover fieldset': {
+                            borderColor: 'white', // Border color on hover
+                        },
+                        '&.Mui-focused fieldset': {
+                            borderColor: 'white', // Border color when focused
+                        },
+                        },
+                    }}
                 />
                 <label>Context</label>
                 <TextField
@@ -97,9 +116,26 @@ const PostForm = () => {
                 rows={10}
                 name="context"
                 onChange={handleChange}
-                sx={{ width: '100%' }}
+                sx={{width: '100%', 
+                    '& label.Mui-focused': {
+                        color: '#A0AAB4',
+                    },
+                    '& .MuiInput-underline:after': {
+                        borderBottomColor: '#B2BAC2',
+                    },
+                    '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                        borderColor: '#E0E3E7',
+                        },
+                        '&:hover fieldset': {
+                        borderColor: '#B2BAC2',
+                        },
+                        '&.Mui-focused fieldset': {
+                        borderColor: '#6F7E8C',
+                        },
+                    },
+                }}
                 />
-
                 <label>Channel</label>
                 <select name="channel_id" value={post.channel_id} onChange={handleChange}>
                     {channels.map((channel) => (

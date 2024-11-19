@@ -8,6 +8,7 @@ import more from '../components/more.png';
 
 const Post = () => {
     const { id } = useParams();
+    const [count, setCount] = useState(0);
     const [post, setPost] = useState(null);
     const [error, setError] = useState(null);
     const [comments, setComments] = useState([]);
@@ -26,13 +27,14 @@ const Post = () => {
         const fetchPost = async () => {
             const { data, error } = await supabase
                 .from("posts")
-                .select("*, user_id (username)")  
+                .select("*, user_id (username), likes")  
                 .eq("id", id)
                 .single();
             if (error) {
                 setError(error.message);
             } else {
                 setPost(data);
+                setCount(data.likes);
             }
         };
 
@@ -74,6 +76,14 @@ const Post = () => {
         }
     };
 
+    const updateCount = async () => {
+        await supabase
+        .from("posts")
+        .update({ likes: count + 1 })
+        .eq("id", id);
+        setCount(count + 1);
+    };
+
     const formatDate = (date) => {
         if (!date) return "";
         return formatDistanceToNow(new Date(date), { addSuffix: true });
@@ -89,40 +99,47 @@ const Post = () => {
                     </div>
                     <div className="author">
                         <p>Posted by {post.user_id?.username}</p> 
-                        <small>{formatDate(post.created_at)}</small>
+                        <p>• {formatDate(post.created_at)}</p>
                         {/* <small>Posted by {post.user_id.username} {formatDate(post.created_at)}</small> */}
                     </div>
                     <div className="post-context">
                         <h2>{post.title}</h2>
                         <p>{post.context}</p>
                     </div>
+                    <button className="betButton" onClick={updateCount} >👍 : {count}</button>
                 </div>
             ) : (
                 <p>Loading...</p>
             )}
 
             <div className="comments-container">
-                <h3>Comments</h3>
-                <ul>
-                    {comments.map((comment) => (
-                        <li key={comment.id}>
-                            <p>{comment.context}</p> 
-                            <small>
-                                {comment.user_id?.username || "Anonymous"}{" "}
-                                {formatDate(comment.created_at)}
-                            </small>
-                        </li>
-                    ))}
-                </ul>
-
-                <form onSubmit={(e) => { e.preventDefault(); handleComment(); }}>
+            <form onSubmit={(e) => { e.preventDefault(); handleComment(); }}>
                     <textarea
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder="Add a comment"
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                                e.preventDefault(); // Prevents a new line in the textarea
+                                handleComment();
+                            }
+                        }}
                     ></textarea>
-                    <button type="submit" disabled={!newComment.trim()}>Post Comment</button>
+                    <button type="submit" disabled={!newComment.trim()}>Submit</button>
                 </form>
+                <h3>Comments</h3>
+                <ul>
+                    {comments.map((comment) => (
+                        <li key={comment.id}>
+                            <small>
+                                {comment.user_id?.username || "Anonymous"}{" "}
+                                • {formatDate(comment.created_at)}
+                            </small>
+                            <p>{comment.context}</p> 
+                        </li>
+                    ))}
+                </ul>
+
             </div>
         </div>
     );

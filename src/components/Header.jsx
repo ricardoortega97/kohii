@@ -51,7 +51,7 @@ const Header = ({allPosts, setFilteredResults }) => {
             <div className="inner-header">
                 {/* cspell: disable-next-line */}
                 <h2>Kohii</h2>
-                <div className="search-container">
+                <div className="search-bar">
                     <input type="text"
                     placeholder="Search..." 
                     value={searchInput}

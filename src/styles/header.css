@@ -5,11 +5,11 @@
     right: 0px;
     z-index: 9;
     height: 62px;
-    border-bottom: 2px solid rgb(178, 201, 233);
+    border-bottom: 2px solid #6b6b6b;
     display: flex;
     -webkit-box-pack: center;
     justify-content: center;
-    background-color: rgb(12, 12, 14);
+    background-color: #101012;
 }
 .header .inner-header {
     display: flex;
@@ -30,4 +30,8 @@
     -webkit-box-align: center;
     align-items: center;
     gap: 0.5rem;
+}
+.search-bar input {
+    background-color: #2a2a2a;
+    color: white;
 }

@@ -4,7 +4,7 @@
     padding: 20px;
     border-radius: 5px;
     margin-top: 20px;
-    background-color: #ffffff;
+    background-color: #1a1a1a;
 }
 .create-post h2 {
     margin-bottom: 10px;
@@ -12,19 +12,51 @@
 .context {
     width: 500px;
 }
-
 p {
-    color: #1b1a1e;
+    color: #d3d3d3;
 }
 .post-card {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
     margin-left: 1rem;
     max-width: 500px;
     min-width: 20em;
     padding: 20px;
-    border: 1px solid #412594;
+    border-top: 1px solid #6b6b6b;
+}
+.post-card:hover {
     border-radius: 5px;
-    margin-top: 20px;
-    background-color: #ffffff;
-    justify-content: space-between;
-    align-self: start;
+    background-color: #272727;
+}
+
+#outlined-multiline-static {
+    color: #ffffff;
+    background-color: rgb(32, 32, 32);
+}
+#outlined-helperText{
+    color: #ffffff;
+    background-color: rgb(32, 32, 32);
+}
+.user{
+    align-items: start;
+    display: flex;
+}
+#likes {
+    align-items: start;
+    display: flex;
+}
+.title {
+    align-items: start;
+    display: flex;
+    flex-direction: column;
+}
+.title h3 {
+    margin: 0;
+}
+.title p {
+    margin: 0;
+}
+.title span {
+    font-size: bolder;
 }
