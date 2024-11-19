@@ -17,15 +17,19 @@ const Edit = () => {
                 .select("*")
                 .eq("id", id)
                 .single();
-            setPost(data);
+            if (data) {
+                setPost(data);
 
-            const { data: userData } = await supabase
-                .from("users")
-                .select("username")
-                .eq("id", data.user_id)
-                .single();
-            
-            setUser(userData);
+                const { data: userData } = await supabase
+                    .from("users")
+                    .select("username")
+                    .eq("id", data.user_id)
+                    .single();
+                
+                if (userData) {
+                    setUser(userData);
+                }
+            }
 
         };
         fetchPost();
