@@ -5,6 +5,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
 import '../styles/post.css';
 import more from '../components/more.png';
+import heart from '../assets/heart.png';
 
 const Post = () => {
     const { id } = useParams();
@@ -106,7 +107,10 @@ const Post = () => {
                         <h2>{post.title}</h2>
                         <p>{post.context}</p>
                     </div>
-                    <button className="betButton" onClick={updateCount} >👍 : {count}</button>
+                    <div className="like-container">
+                    <img src={heart} alt="heart" onClick={updateCount} />
+                    <span>{count}</span>
+                    </div>
                 </div>
             ) : (
                 <p>Loading...</p>
@@ -125,7 +129,6 @@ const Post = () => {
                             }
                         }}
                     ></textarea>
-                    <button type="submit" disabled={!newComment.trim()}>Submit</button>
                 </form>
                 <h3>Comments</h3>
                 <ul>
