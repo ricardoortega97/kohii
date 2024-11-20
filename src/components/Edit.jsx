@@ -12,25 +12,21 @@ const Edit = () => {
 
     useEffect(() => {
         const fetchPost = async () => {
-            const { data } = await supabase
+            // Fetch the post
+            const { data: postData } = await supabase
                 .from("posts")
                 .select("*")
                 .eq("id", id)
                 .single();
-            if (data) {
-                setPost(data);
-
-                const { data: userData } = await supabase
-                    .from("users")
-                    .select("username")
-                    .eq("id", data.user_id)
-                    .single();
-                
-                if (userData) {
-                    setUser(userData);
-                }
+            if (postData) {
+                setPost(postData);
             }
-
+    
+            // Get the currently signed-in user
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                setUser(session.user); // Set the current user
+            }
         };
         fetchPost();
     }, [id]);
@@ -52,6 +48,12 @@ const Edit = () => {
     };
 
     const deletePost = async () => {
+
+        await supabase
+            .from("comments")
+            .delete()
+            .eq("post_id", id);
+
         await supabase
             .from("posts")
             .delete()
@@ -131,7 +133,7 @@ const Edit = () => {
                 />
                 <div>
                     <button type="submit">Update Post</button>
-                    <button onClick={deletePost}>Delete Post</button>
+                    <button type="button" onClick={deletePost}>Delete Post</button>
                 </div>
             </form>
         </div>
